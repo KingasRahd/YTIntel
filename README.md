@@ -4,6 +4,10 @@
 
 ---
 
+**Link to Web App** : https://ytintel-9ubq6fdahmqfauxzmwvxwm.streamlit.app/
+
+---
+
 ## 🚨 Problem
 YouTube is overflowing with valuable content — but when a user wants to learn something specific, finding the right videos becomes a frustrating mess.
 
