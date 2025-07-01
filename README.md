@@ -4,6 +4,51 @@
 
 ---
 
+## 🚨 Problem
+YouTube is overflowing with valuable content — but when a user wants to learn something specific, finding the right videos becomes a frustrating mess.
+
+Search results are noisy, clickbait-heavy, and popularity-driven
+
+Channel pages contain hundreds of videos with little guidance
+
+Even playlists, when available, are generic and not personalized
+
+Users waste time scrolling, guessing, and getting distracted, especially when they’re just trying to follow a goal like “learn AI for research” or “build confidence”
+
+For learners and upskillers, this is a huge productivity leak.
+
+---
+
+## ✅ How YTIntel Solves It
+YTIntel is an intelligent YouTube channel summarizer that helps users find only the most relevant videos from any channel — based on their personal goals.
+
+Using:
+
+🎯 User-defined goals
+
+📺 Channel video metadata (title, description, tags, etc.)
+
+🤖 Gemini LLM via LangChain for deep filtering
+
+📊 Relevance scoring and justification-based ranking
+
+## YTIntel:
+
+Picks only the videos that align with the user’s intent
+
+Categorizes them meaningfully (e.g., "Foundational", "Actionable Advice", etc.)
+
+Provides brief explanations for why each video was chosen
+
+Filters out everything else
+
+## In short:
+
+YTIntel turns chaotic video libraries into goal-focused learning paths — instantly.
+No playlists. No guesswork. No fluff.
+
+---
+
 ## 🚀 Features
 
 - 🔎 **Channel Summarization** – Quickly get a summary of the channel: name, subscribers, video count, etc.
