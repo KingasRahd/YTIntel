@@ -1,0 +1,5 @@
+.env
+m.txt
+brain.ipynb
+.ipynb_checkpoints/
+__pycache__/
