@@ -25,7 +25,7 @@ def preprocessing(uploads_id,goals,next_page_id):
     request=yt.playlistItems().list(
     playlistId=uploads_id,
     part=['contentDetails'],
-    maxResults=20,
+    maxResults=50,
     pageToken=next_page_id
 )
     response=request.execute()
