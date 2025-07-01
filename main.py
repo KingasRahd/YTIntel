@@ -1,7 +1,7 @@
 from googleapiclient.discovery import build
 import os
 import pandas as pd
-import json
+import json,time
 import streamlit as st
 from dotenv import load_dotenv
 import preprocessor
@@ -74,7 +74,7 @@ try:
             while True:
                 filtered_df,next_page_id,rows=preprocessor.preprocessing(uploads_id,goals,next_page_id)
                 placeholder.write(f'Filtered {filtered_df.shape[0]}/{rows} videos ') 
-
+                time.sleep(0.3)
                 if next_page_id==None:
                     break
 
