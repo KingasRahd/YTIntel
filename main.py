@@ -19,6 +19,8 @@ col[0].image('https://imgs.search.brave.com/JcNizJbvdueXE1HaRjeJO004oNeH5dvxggxG
 col[1].title(' YTIntel')
 st.markdown('#### Your smart assistant for analyzing YouTube channels and recommending videos tailored to your personal learning goals.')
 st.write('*Reload on Crash')
+col=st.columns([1,1,1])
+col[2].markdown('###### Built by ~ Sagnik✨')
 st.markdown('---')
 ####################################
 #insert streamlit code for user input here
@@ -33,12 +35,14 @@ st.markdown('---')
 ####################################
 try:
     if ch_id and goals:
+        
+        #calling channel
         request=yt.channels().list(
         id=ch_id,
         part=['contentDetails','snippet','statistics']
         )
         response=request.execute()
-
+        
         #from snippet
         ch_name=response['items'][0]['snippet']['title']
         ch_desc=response['items'][0]['snippet']['description']
@@ -70,55 +74,93 @@ try:
 
         placeholder=st.empty()
 
-        with st.spinner('Searching Relevant Videos for You'):
-            while True:
-                filtered_df,next_page_id,rows=preprocessor.preprocessing(uploads_id,goals,next_page_id)
-                placeholder.write(f'Filtered {filtered_df.shape[0]}/{rows} videos ') 
-                time.sleep(4)
-                if next_page_id==None:
-                    break
+        if (('filtered_df' not in st.session_state) or (st.session_state['ch_id']!=ch_id) or (st.session_state['goals']!=goals)):
+    
+            st.session_state['ch_id']=ch_id
+            st.session_state['goals']=goals
+            with st.spinner('Searching Relevant Videos for You'):
+                while True:
+                    st.session_state['filtered_df'],next_page_id,st.session_state['rows']=preprocessor.preprocessing(uploads_id,goals,next_page_id)
+                    placeholder.write(f"Filtered {st.session_state['filtered_df'].shape[0]}/{st.session_state['rows']} videos ") 
+                    time.sleep(4)
+                    if next_page_id==None:
+                        break
+                    
+        ndf=st.session_state['filtered_df']
+        rows=st.session_state['rows']
 
         st.title('Recommended Videos :')
-        st.subheader(f'{filtered_df.shape[0]}/{rows}')
+        st.subheader(f'{ndf.shape[0]}/{rows}')
         st.markdown('---')
 
         #edge case
-        if filtered_df.empty:
+        if ndf.empty:
             col=st.columns([1,1,1])
             col[1].image('https://imgs.search.brave.com/XuvQlzKHLLsQIFwrlxSmvCItKffQDk9QWA81aKeCCOM/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly93d3cu/cG5naXRlbS5jb20v/cGltZ3MvbS8xNTAt/MTUwNTcxMV9uby1y/ZXN1bHQtcG5nLXRy/YW5zcGFyZW50LXBu/Zy5wbmc',width=200)
             st.markdown('##### No videos matched your goal. Try adjusting your Input?')
 
-        #for edge case filtered_df.shape[0]=0 therfore control does not enter loop 
+        
 
-        #display format 1
-        # col=st.columns([1,1,1])
-        # for i in range(0,filtered_df.shape[0],3):
-        #     col[0].markdown(f"[![Video Thumbnail]({filtered_df.iloc[i]['Thumbnail']})]({filtered_df.iloc[i]['URL']})")
-        #     col[0].markdown(f"**{filtered_df.iloc[i]['Title']}**")
-        #     col[0].markdown(f"**Reason:** {filtered_df.iloc[i]['Justification']}")
-        #     col[0].markdown('---')
 
-        #     try:
-        #         col[1].markdown(f"[![Video Thumbnail]({filtered_df.iloc[i+1]['Thumbnail']})]({filtered_df.iloc[i+1]['URL']})")
-        #         col[1].markdown(f"**{filtered_df.iloc[i+1]['Title']}**")
-        #         col[1].markdown(f"**Reason:** {filtered_df.iloc[i+1]['Justification']}")
-        #         col[1].markdown('---')
-        #     except:pass
+        try:   # this is to handle the edge case of 0 videos filtered when ndf is empty
+        
+            #creating a csv file
+            csv_data=ndf[['Title','Category','URL','Justification']]
+            csv_data=csv_data.to_csv(index=False)
 
-        #     try:
-        #         col[2].markdown(f"[![Video Thumbnail]({filtered_df.iloc[i+2]['Thumbnail']})]({filtered_df.iloc[i+2]['URL']})")
-        #         col[2].markdown(f"**{filtered_df.iloc[i+2]['Title']}**")
-        #         col[2].markdown(f"**Reason:** {filtered_df.iloc[i+2]['Justification']}")
-        #         col[2].markdown('---')
-        #     except:pass
+            #making the download button
+            col=st.columns([3,1])
+            col[1].download_button(
+                label='Download List as CSV',
+                data=csv_data,
+                file_name='YTIntel_Filtered_Videos.csv',
+                mime='text/csv'
+            )
 
-        #display format 2
-        for i in range(filtered_df.shape[0]):
-            col=st.columns([1,3])
-            col[0].markdown(f"[![Video Thumbnail]({filtered_df.iloc[i]['Thumbnail']})]({filtered_df.iloc[i]['URL']})")
-            col[1].markdown(f"**{filtered_df.iloc[i]['Title']}**")
-            col[1].markdown(f"**Reason:** {filtered_df.iloc[i]['Justification']}")
-            st.markdown('---')
+            #selecting category
+            categories=ndf['Category'].unique()
+            category=st.selectbox('Select Category',categories)
+
+            #category wise data selection
+            filtered_df=ndf.query('Category==@category')
+           
+            col=st.columns([3,1,3])
+            col[1].markdown(f"**Videos : {filtered_df.shape[0]}**")
+            st.markdown('')
+
+            #display format 1
+            for i in range(filtered_df.shape[0]):
+                col=st.columns([1,3])
+                col[0].markdown(f"[![Video Thumbnail]({filtered_df.iloc[i]['Thumbnail']})]({filtered_df.iloc[i]['URL']})")
+                col[1].markdown(f"**{filtered_df.iloc[i]['Title']}**")
+                col[1].markdown(f"**Reason:** {filtered_df.iloc[i]['Justification']}")
+                col[1].markdown(f"**Category:** {filtered_df.iloc[i]['Category']}")
+                st.markdown('---')
+
+
+            #display format 2
+            # col=st.columns([1,1,1])
+            # for i in range(0,filtered_df.shape[0],3):
+            #     col[0].markdown(f"[![Video Thumbnail]({filtered_df.iloc[i]['Thumbnail']})]({filtered_df.iloc[i]['URL']})")
+            #     col[0].markdown(f"**{filtered_df.iloc[i]['Title']}**")
+            #     col[0].markdown(f"**Reason:** {filtered_df.iloc[i]['Justification']}")
+            #     col[0].markdown('---')
+
+            #     try:
+            #         col[1].markdown(f"[![Video Thumbnail]({filtered_df.iloc[i+1]['Thumbnail']})]({filtered_df.iloc[i+1]['URL']})")
+            #         col[1].markdown(f"**{filtered_df.iloc[i+1]['Title']}**")
+            #         col[1].markdown(f"**Reason:** {filtered_df.iloc[i+1]['Justification']}")
+            #         col[1].markdown('---')
+            #     except:pass
+
+            #     try:
+            #         col[2].markdown(f"[![Video Thumbnail]({filtered_df.iloc[i+2]['Thumbnail']})]({filtered_df.iloc[i+2]['URL']})")
+            #         col[2].markdown(f"**{filtered_df.iloc[i+2]['Title']}**")
+            #         col[2].markdown(f"**Reason:** {filtered_df.iloc[i+2]['Justification']}")
+            #         col[2].markdown('---')
+            #     except:pass
+        
+        except: pass
         
     else:
         col=st.columns([1,5,1])

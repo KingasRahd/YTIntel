@@ -60,6 +60,7 @@ No playlists. No guesswork. No fluff.
 - 🧠 **LLM-Powered Analysis** – Uses Gemini to deeply understand video titles, descriptions, and metadata.
 - 📊 **Streamlit UI** – Clean, simple, interactive interface.
 - 📷 **Video Thumbnails + Links** – Beautiful video display in YouTube style.
+- ✨ **Categorizes the video**-It categorizes the video for easier navigation
 
 ---
 
@@ -89,7 +90,7 @@ No playlists. No guesswork. No fluff.
    - Gemini filters and analyzes videos to find those that are *most relevant* to the user's goals
 
 4. **Output**:  
-   - Displays the selected video cards with linked thumbnails,titles, and justifications
+   - Displays the selected video cards with linked thumbnails,titles, and justifications and category
 
 ---
 

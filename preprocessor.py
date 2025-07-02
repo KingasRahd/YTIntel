@@ -168,13 +168,41 @@ def feed_llm(video_data,goals):
 
 4. For each selected video, provide a brief justification explaining why it is relevant and valuable for the user's specific goals.
 
-5. If **no videos match the goal domain strictly**, return the 'NA':
+5. Tag a category to each video depending on the nature of the video:
+
+### 🧠 Examples of Categories
+
+    #### For technical/educational content:
+    - **Must Watch** – Crucial for the goal; high impact
+    - **Foundational** – Covers basics or prerequisites
+    - **Extra Knowledge** – Not essential but interesting
+    - **Practical Tutorial** – Step-by-step guides or coding walkthroughs
+    - **Quick Wins** – Easy tricks/tips with instant results
+    - **Conceptual Clarity** – Explains key ideas clearly
+    - **Advice** – General guidance from experience
+    - **Deep Dive** – In-depth exploration of a topic
+
+    #### For self-help/personal development:
+    - **Core Mindset Shift** – Changes perspective significantly
+    - **Actionable Advice** – Tips that can be directly applied
+    - **Concept Explainer** – Breaks down personal growth theories
+    - **Motivational** – Inspires action or energy
+    - **Habit Building** – Focuses on behavior change
+    - **Psychological Insight** – Mental models or cognitive insights
+    - **Extra Perspective** – Broader views that enrich thinking
+
+for other video genres add video according to your judgement but dont create too many tags
+
+6. Do not include videos that seem like clickbait judging from views, likes and comment count
+    
+7. If **no videos match the goal domain strictly**, return the 'NA':
 
     ---
 
     For each selected video, return a JSON object in the following format:
     (
         "VID": "<video_id>",
+        "Category":"<video_category>"
         "Justification": "<brief explanation of why this video is relevant and categorized as such>"
     )
 
