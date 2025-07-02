@@ -135,7 +135,7 @@ try:
                 col[1].markdown(f"**{filtered_df.iloc[i]['Title']}**")
                 col[1].markdown(f"**Reason:** {filtered_df.iloc[i]['Justification']}")
                 col[1].markdown(f"**Category:** {filtered_df.iloc[i]['Category']}")
-                st.markdown('---')
+                
 
 
             #display format 2
