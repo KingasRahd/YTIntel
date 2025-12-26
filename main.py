@@ -34,7 +34,6 @@ preprocessor.df=pd.DataFrame()
 st.markdown('---')
 ####################################
 try:
-    st.write(api_key)
     if ch_id and goals:
         
         #calling channel
